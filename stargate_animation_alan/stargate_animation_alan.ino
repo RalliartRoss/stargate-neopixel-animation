@@ -55,7 +55,7 @@ void setup() {
 
 void loop()
 {
-  goto shimmer;
+  //goto shimmer;
   alloff();
   delay (300); //time in ms gate is off between dial cycles
 
@@ -77,7 +77,7 @@ shimmer:
   //for (int frameindex = 0; frameindex < strip.numPixels(); frameindex++)
   {
     greenframe(0, 6);
-    delay(500);
+    delay(500*3);
   }
 
   for (int orangeness = 255; orangeness > 0; orangeness--)
@@ -178,7 +178,8 @@ void shimmerframe (int frameindex)
 
     uint32_t color1 = shimmerframeinner1 (chev, i, frameindex);
     uint32_t color2 = shimmerframeinner2 (chev, i, frameindex);
-    uint32_t color = mixcolor (color1, color2);
+    uint32_t color3 = shimmerframeinner3 (chev, i, frameindex);
+    uint32_t color = mixcolor (color1, color2, color3);
     strip.setPixelColor(i, color);
     // Serial.println("hello " + pcolor(color) + " " + String (a) + " " + String (b)); //uncomment to make animations run in correct time
   }
@@ -200,6 +201,15 @@ uint32_t shimmerframeinner2 (int chev, int i, int frameindex)
   uint32_t color = scolor(chev + orangeness,   orangeness,   blu);
   return color;
 }
+
+uint32_t shimmerframeinner3 (int chev, int i, int frameindex)
+{
+  int blu = 75 + frameindexpatternspeed(i, -0.8 * frameindex, 60, 6);
+  int orangeness = frameindexpatternspeed(i, 0.35 * frameindex, 60, 3);
+  uint32_t color = scolor(chev + orangeness,   orangeness,   blu);
+  return color;
+}
+
 
 
 int frameindexpatternspeed (int i, double frameindex, int mod, int scale )
@@ -230,6 +240,29 @@ uint32_t mixcolor (uint32_t color_1, uint32_t color_2)
 
   return scolor(r3, g3, b3);
 }
+
+
+uint32_t mixcolor (uint32_t color_1, uint32_t color_2, uint32_t color_3)
+{
+  uint8_t r1 = ( color_1 ) >> 16;
+  uint8_t g1 = ( color_1 ) >> 8;
+  uint8_t b1 = ( color_1 ) >> 0;
+
+  uint8_t r2 = ( color_2 ) >> 16;
+  uint8_t g2 = ( color_2 ) >> 8;
+  uint8_t b2 = ( color_2 ) >> 0;
+
+  uint8_t r3 = ( color_3 ) >> 16;
+  uint8_t g3 = ( color_3 ) >> 8;
+  uint8_t b3 = ( color_3 ) >> 0;
+
+  uint8_t r = ((r1 + r2 + r3) / 3);
+  uint8_t g = ((g1 + g2 + g3) / 3);
+  uint8_t b = ((b1 + b2 + b3) / 3);
+
+  return scolor(r, g, b);
+}
+
 
 String pcolor (uint32_t color)
 {
