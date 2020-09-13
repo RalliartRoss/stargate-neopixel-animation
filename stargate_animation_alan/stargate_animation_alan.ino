@@ -175,13 +175,13 @@ void shimmerframe (int frameindex)
     int chev = chevpattern (i, 6);
     //int gr = nonlinearbrightness((i + frameindex) % 6) - chev;
 
-    int a = ((i + frameindex) % 60) / 1;
-    int blu = 0 + bluepattern(a) * 8;
-    int b = ( int(i - (1.5 * frameindex)) % 60) * 2;
+    int a = (int(i +(0.3* frameindex)) % 40) ;
+    int blu = 75 + bluepattern(a) * 6;
+    int b = ( int(i - (0.2 * frameindex)) % 35) ;
     int orangeness = bluepattern(abs(b)) * 3;
     uint32_t color = scolor(chev + orangeness,   orangeness,   blu);
     strip.setPixelColor(i, color);
-    Serial.println("hello " + pcolor(color) + " " + String (a) + " " + String (b)); //uncomment to make animations run in correct time
+   // Serial.println("hello " + pcolor(color) + " " + String (a) + " " + String (b)); //uncomment to make animations run in correct time
   }
   strip.show();
 }
