@@ -59,25 +59,35 @@ void loop()
   alloff();
   delay (300); //time in ms gate is off between dial cycles
 
+
+  int numPixels = strip.numPixels();
+
   for (int chevcount = 0; chevcount < 6; chevcount += 2)
   {
-    for (int frameindex = 0; frameindex < strip.numPixels(); frameindex++)
+    greenframe(0, chevcount);
+    delay (400);
+    for (int frameindex = 0; frameindex < numPixels; frameindex++)
     {
       greenframe(frameindex, chevcount);
-      delay(100);
+
+      delay(dialmomentum(frameindex, numPixels / 8, numPixels ));
     }
 
-    for (int frameindex = 0; frameindex < strip.numPixels(); frameindex++)
+    greenframe(0, chevcount);
+    delay (400);
+
+    for (int frameindex = 0; frameindex < numPixels; frameindex++)
     {
       greenframe(strip.numPixels() - frameindex, chevcount + 1);
-      delay(100);
+
+      delay(dialmomentum(frameindex, numPixels / 8, numPixels ));
     }
   }
 shimmer:
   //for (int frameindex = 0; frameindex < strip.numPixels(); frameindex++)
   {
     greenframe(0, 6);
-    delay(500*3);
+    delay(500 * 3);
   }
 
   for (int orangeness = 255; orangeness > 0; orangeness--)
@@ -88,7 +98,7 @@ shimmer:
   }
 
 
-  for (int tick = 0; tick < 3000; tick++)
+  for (int tick = 0; tick < 1500; tick++)
   {
     //   int orangeness = 25 + sin(radians(tick * 0.5)) * 25;
     // int blue = 225 + sin(radians(tick * 1.3)) * 25;
@@ -108,6 +118,34 @@ shimmer:
 
   alloff ();
   delay (500);
+}
+
+int dialmomentum (int index, int ramp, int maxindex)
+{
+  int a = 300;
+  double c = 2.0;
+  int base = 100;
+
+  if (index < ramp)
+  {
+    int distancestop = index;
+    int distancemax = ramp - index;
+    int s = distancemax * distancemax * distancemax / c;
+    int t = a / (distancestop * distancestop);
+    return s + base + t;
+  }
+  else if (index > maxindex - ramp)
+  {
+    int distancestop = maxindex - index;
+    int distancemax = index - (maxindex - ramp);
+    int s = distancemax * distancemax * distancemax / c;
+    int t = a / (distancestop * distancestop);
+    return s + base + t;
+  }
+  else
+  {
+    return base;
+  }
 }
 
 void allonecolor (uint32_t color)
