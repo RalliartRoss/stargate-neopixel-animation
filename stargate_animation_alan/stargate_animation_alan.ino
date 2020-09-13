@@ -61,34 +61,48 @@ void loop()
 
 
   int numPixels = strip.numPixels();
+  int ramp = 7;//number of leds to ramp up and down
   int lockdelay = 400; //stop duration time (bigger=longer pause)
+  int chevdist [6] = {31, 44, 52, 35, 40, 58}; //these numbers must be more than double (ramp)value and less than number of leds
 
-  for (int chevcount = 0; chevcount < 6; chevcount += 2)
+  for (int chevcount = 0; chevcount < 6;)
   {
     greenframe(0, chevcount);
     delay (lockdelay);
-    for (int frameindex = 0; frameindex < numPixels; frameindex++)
+    for (int frameindex = 0; frameindex < chevdist[chevcount]; frameindex++)
     {
       greenframe(frameindex, chevcount);
 
-      delay(dialmomentum(frameindex, numPixels / 8, numPixels ));
+      delay(dialmomentum(frameindex,  ramp, chevdist[chevcount] ));
     }
+
+    chevcount++;
 
     greenframe(0, chevcount);
     delay (lockdelay);
 
-    for (int frameindex = 0; frameindex < numPixels; frameindex++)
+    for (int frameindex = 0; frameindex < chevdist[chevcount]; frameindex++)
     {
-      greenframe(strip.numPixels() - frameindex, chevcount + 1);
+      greenframe(strip.numPixels() - frameindex, chevcount);
 
-      delay(dialmomentum(frameindex, numPixels / 8, numPixels ));
+      delay(dialmomentum(frameindex, ramp, chevdist[chevcount] ));
     }
+
+    chevcount++;
   }
 shimmer:
   //for (int frameindex = 0; frameindex < strip.numPixels(); frameindex++)
   {
     greenframe(0, 6);
     delay(500 * 3);
+  }
+
+
+  for (int orangeness = 0; orangeness > 255; orangeness--)
+  {
+    uint32_t color = strip.Color(orangeness, orangeness, 255);
+    allonecolor(color);
+    delay (1);
   }
 
   for (int orangeness = 255; orangeness > 0; orangeness--)
