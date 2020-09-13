@@ -61,11 +61,12 @@ void loop()
 
 
   int numPixels = strip.numPixels();
+  int lockdelay = 400; //stop duration time (bigger=longer pause)
 
   for (int chevcount = 0; chevcount < 6; chevcount += 2)
   {
     greenframe(0, chevcount);
-    delay (400);
+    delay (lockdelay);
     for (int frameindex = 0; frameindex < numPixels; frameindex++)
     {
       greenframe(frameindex, chevcount);
@@ -74,7 +75,7 @@ void loop()
     }
 
     greenframe(0, chevcount);
-    delay (400);
+    delay (lockdelay);
 
     for (int frameindex = 0; frameindex < numPixels; frameindex++)
     {
@@ -122,9 +123,9 @@ shimmer:
 
 int dialmomentum (int index, int ramp, int maxindex)
 {
-  int a = 300;
-  double c = 2.0;
-  int base = 100;
+  int a = 300;//bigger number =slower near stop
+  double c = 2.0;//bigger= faster near ramp point
+  int base = 100;//fastest speed possiable (delay, bigger=slower)
 
   if (index < ramp)
   {
