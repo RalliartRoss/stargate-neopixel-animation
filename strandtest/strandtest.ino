@@ -88,7 +88,7 @@ shimmer:
   }
 
 
-  for (int tick = 0; tick < 1000 * 32 * 60; tick++)
+  for (int tick = 0; tick < 3000; tick++)
   {
     //   int orangeness = 25 + sin(radians(tick * 0.5)) * 25;
     // int blue = 225 + sin(radians(tick * 1.3)) * 25;
@@ -138,6 +138,7 @@ void greenframe (int frameindex, int chevcount)
   strip.show();
 }
 
+// return integer between 0 and 30
 int bluepattern (int i)
 {
   switch (i)
@@ -173,11 +174,14 @@ void shimmerframe (int frameindex)
   {
     int chev = chevpattern (i, 6);
     //int gr = nonlinearbrightness((i + frameindex) % 6) - chev;
-    int blu = 220 + bluepattern((i + frameindex / 4) % 60);
-    int orangeness = bluepattern((i - frameindex / 5) % 60)*3;
+
+    int a = ((i + frameindex) % 60) / 1;
+    int blu = 0 + bluepattern(a) * 8;
+    int b = ( int(i - (1.5 * frameindex)) % 60) * 2;
+    int orangeness = bluepattern(abs(b)) * 3;
     uint32_t color = scolor(chev + orangeness,   orangeness,   blu);
     strip.setPixelColor(i, color);
-    //Serial.println("hello "+String(gr));
+    Serial.println("hello " + pcolor(color) + " " + String (a) + " " + String (b)); //uncomment to make animations run in correct time
   }
   strip.show();
 }
@@ -185,6 +189,15 @@ void shimmerframe (int frameindex)
 uint32_t scolor(int r, int g, int b)
 {
   return strip.Color(colorclamp(r), colorclamp(g), colorclamp(b));
+
+}
+
+String pcolor (uint32_t color)
+{
+  uint8_t r = ( color ) >> 16;
+  uint8_t g = ( color ) >> 8;
+  uint8_t b = ( color ) >> 0;
+  return "" + String(r) + " " + String (g) + " " + String(b);
 }
 
 int colorclamp(int v)
