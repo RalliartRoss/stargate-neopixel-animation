@@ -63,7 +63,7 @@ void loop()
   int numPixels = strip.numPixels();
   int ramp = 7;//number of leds to ramp up and down
   int lockdelay = 400; //stop duration time (bigger=longer pause)
-  int chevdist [6] = {31, 44, 52, 35, 40, 58}; //these numbers must be more than double (ramp)value and less than number of leds
+  int chevdist [6] = {30, 40, 50, 20, 40, 50}; //these numbers must be more than double (ramp)value and less than number of leds
 
   for (int chevcount = 0; chevcount < 6;)
   {
@@ -132,12 +132,12 @@ shimmer:
 
 
   alloff ();
-  delay (500);
+  delay (1500);
 }
 
 int dialmomentum (int index, int ramp, int maxindex)
 {
-  int a = 300;//bigger number =slower near stop
+  int a = 200;//bigger number =slower near stop
   double c = 2.0;//bigger= faster near ramp point
   int base = 100;//fastest speed possiable (delay, bigger=slower)
 
